@@ -7,7 +7,6 @@ import net.minecraft.client.gui.PlayerSkinDrawer;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.SkinTextures;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -40,10 +39,10 @@ public final class Alerts {
         final String name;
         final double amount;
         final Config.Tier tier;
-        final SkinTextures skin;
+        final PlayerListEntry skin;
         final long start = System.currentTimeMillis();
 
-        Toast(String name, double amount, Config.Tier tier, SkinTextures skin) {
+        Toast(String name, double amount, Config.Tier tier, PlayerListEntry skin) {
             this.name = name;
             this.amount = amount;
             this.tier = tier;
@@ -61,7 +60,7 @@ public final class Alerts {
     private static double aMin, aBid;
     private static int aQty;
     private static String aItem = "", aItemId = "minecraft:elytra", aBidder;
-    private static SkinTextures aSkin;
+    private static PlayerListEntry aSkin;
 
     private static String lastKey = "";
     private static long lastKeyTime = 0;
@@ -113,11 +112,10 @@ public final class Alerts {
         playSound(t.sound);
     }
 
-    private static SkinTextures skinFor(String name) {
+    private static PlayerListEntry skinFor(String name) {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.getNetworkHandler() == null) return null;
-        PlayerListEntry e = mc.getNetworkHandler().getPlayerListEntry(name);
-        return e == null ? null : e.getSkinTextures();
+        return mc.getNetworkHandler().getPlayerListEntry(name);
     }
 
     public static void playSound(String friendlyName) {
@@ -347,9 +345,9 @@ public final class Alerts {
         return MinecraftClient.getInstance().textRenderer;
     }
 
-    public static void drawHead(DrawContext ctx, SkinTextures skin, String name, int x, int y, int size) {
+    public static void drawHead(DrawContext ctx, PlayerListEntry skin, String name, int x, int y, int size) {
         if (skin != null) {
-            PlayerSkinDrawer.draw(ctx, skin, x, y, size);
+            PlayerSkinDrawer.draw(ctx, skin.getSkinTextures(), x, y, size);
         } else {
             ctx.fill(x, y, x + size, y + size, 0xFF3A3A4A);
             String s = (name == null || name.isEmpty()) ? "?" : name.substring(0, 1).toUpperCase();
@@ -367,7 +365,7 @@ public final class Alerts {
         m.pop();
     }
 
-    public static void drawToast(DrawContext ctx, int x, int y, String name, double amount, int color, SkinTextures skin) {
+    public static void drawToast(DrawContext ctx, int x, int y, String name, double amount, int color, PlayerListEntry skin) {
         TextRenderer t = tr();
         ctx.fill(x, y, x + TOAST_W, y + TOAST_H, 0xD00E1420);
         ctx.drawBorder(x, y, TOAST_W, TOAST_H, 0xFF000000 | color);
@@ -387,7 +385,7 @@ public final class Alerts {
     }
 
     public static void drawAuctionBox(DrawContext ctx, int x, int y, boolean active, long msLeft, double min,
-                                      int qty, String item, String itemId, String bidder, double bid, SkinTextures skin) {
+                                      int qty, String item, String itemId, String bidder, double bid, PlayerListEntry skin) {
         TextRenderer t = tr();
         ctx.fill(x, y, x + AUC_W, y + AUC_H, 0xD00E1420);
         ctx.drawBorder(x, y, AUC_W, AUC_H, 0xFFFFAA00);

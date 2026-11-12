@@ -4,7 +4,7 @@ import com.dasa.donutalerts.Alerts;
 import com.dasa.donutalerts.Config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.entity.player.SkinTextures;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
 
 public class HudEditScreen extends BaseScreen {
@@ -15,9 +15,10 @@ public class HudEditScreen extends BaseScreen {
         super(Text.literal("Move boxes"));
     }
 
-    private SkinTextures mySkin() {
+    private PlayerListEntry mySkin() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        return mc.player == null ? null : mc.player.getSkinTextures();
+        if (mc.player == null || mc.getNetworkHandler() == null) return null;
+        return mc.getNetworkHandler().getPlayerListEntry(mc.player.getUuid());
     }
 
     @Override
@@ -25,7 +26,7 @@ public class HudEditScreen extends BaseScreen {
         ctx.fill(0, 0, width, height, 0x55000000);
         int[] t = Alerts.toastPos(width, height);
         int[] a = Alerts.auctionPos(width, height);
-        SkinTextures skin = mySkin();
+        PlayerListEntry skin = mySkin();
         Alerts.drawToast(ctx, t[0], t[1], "SampleUser", 5_000_000, 0x55FF55, skin);
         ctx.drawText(textRenderer, "Payment alerts", t[0], t[1] - 10, 0xFFFFFFFF, true);
         Alerts.drawAuctionBox(ctx, a[0], a[1], true, 30_000, 10_000_000, 1, "Elytra", "minecraft:elytra", "SampleUser", 12_000_000, skin);
