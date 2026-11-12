@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "donutalerts",
+  "version": "${version}",
+  "name": "DonutAlerts",
+  "description": "Payment alerts with tiers, effects, and an auction overlay for DonutSMP.",
+  "authors": ["DaSa2546"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.dasa.donutalerts.DonutAlertsClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.5",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
